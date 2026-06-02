@@ -31,12 +31,13 @@ def print_dependencies():
 
     modules = [
         "requests", "pandas", "numpy", "regex", "tqdm",
-        "bs4", "matplotlib", "torch", "sklearn", "scipy"
+        "bs4", "matplotlib", "torch", "sklearn", "scipy", 
+        "seaborn", "torch_geometric"
     ]
 
-    print(" Dependencies ".center(35, '-'))
+    print(" Dependencies ".center(40, '-'))
     print(f"Python version: {sys.version.split()[0]}")
-    print("-" * 35)
+    print("-" * 40)
 
     for m in modules:
         try:
@@ -45,11 +46,11 @@ def print_dependencies():
             if version is None and m == "bs4":
                 import bs4
                 version = getattr(bs4, "__version__", "unknown")
-            print(f"{m:<12}: {version if version else 'builtin / unknown'}")
+            print(f"{m:<16}: {version if version else 'builtin / unknown'}")
         except Exception as e:
-            print(f"{m:<12}: not installed ({e.__class__.__name__})")
+            print(f"{m:<16}: not installed ({e.__class__.__name__})")
 
-    print("-" * 35)
+    print("-" * 40)
 
 def format_size(size: float | int):
         if size > 1024 * 1024 * 1024:
@@ -202,7 +203,7 @@ def check_file_structure(base_path: PathLib, expected_structure: dict):
     print('File Structure Check Report:\n' + '-'*26 + '\nThe expected structure:\n')
     structure_printer(expected_structure)
     print('\nMissing directories:\n\t' + ('\n\t'.join(missing_dirs) if missing_dirs else 'None'))
-    print('\nExtra directories:\n\t' + ('\n\t'.join(extra_dirs) if extra_dirs else 'None'))
+    # print('\nExtra directories:\n\t' + ('\n\t'.join(extra_dirs) if extra_dirs else 'None'))
     print('\nMissing files:\n\t' + ('\n\t'.join(missing_files) if missing_files else 'None'))
 
     return {
