@@ -287,7 +287,7 @@ Figure 10. Dunn’s test results for different classifications. P-values above .
 To quantify the magnitude and direction of differences between protein groups, I use Cliff's Delta:
 
 $$
-\delta = (\sum_{i,j} I(x_{iA}>x_{jB}) - \sum_{i,j} I(x_{iA}<x_{jB}))/(n_A n_B)
+\delta = (\sum_{i,j} I(x_{iA} \> x_{jB}) - \sum_{i,j} I(x_{iA} \< x_{jB}))/(n_A n_B)
 $$
 
 where:
