@@ -129,6 +129,10 @@ Proteins and Ligands. Proteins are large complex molecules composed of sequences
 Figure 1. HIV-1 protease (blue) complex with DMQ/Mozenavir (yel-
 low) resolved in the pocket (red). PDB: 1dmp.
 
+<img width="3172" height="2356" alt="drug_discovery" src="https://github.com/user-attachments/assets/68aab60a-b4d8-4929-8a30-b3018f234282" />
+Figure 2. Drug Discovery pipeline [32], research-relevant steps highlighted with gray background.
+
+
 
 Binding Sites. The three-dimensional structures of proteins form intricate surfaces with numerous concavities and protrusions, creating distinct microenvironments for ligand binding and catalysis [48]. Therefore, binding sites are typically localized regions com- posed of several residues. These regions are particularly favorable for recognition and interaction with specific ligands. There might also be more than one binding site in a protein. In some cases, a binding site is responsible for the regulation of protein function - binding the ligand leads to conformational changes in the entire protein, modifying its activity. Such sites are called allosteric [53]. However, since experimental datasets, such as scPDB, often stem from crystallography, a common approach is to consider binding pockets as local environments.
 
@@ -150,13 +154,43 @@ Contribution. This work is meant to contribute to a more detailed understanding 
 
 ## Materials
 
+| Metric | Value |
+|----------|----------|
+| Total Entries | 17,594 |
+| Unique PDB IDs | 16,612 |
+| Unique UniProt IDs | 4,688 |
+| Mean Resolution (Å) | 2.14 |
+| Unique Species | 927 |
+| Most Common Species | *H. sapiens*, *E. coli*, *R. norvegicus* |
+| Most Common Kingdoms | Eukaryota, Bacteria, Viruses |
+| SCOPe Classes Present | 776 |
+| Most Common SCOPe Classes | d.144.1, l.1.1, b.50.1 |
+| Binding Sites with Metals | 3,323 |
+| Common Metals | Mg, Zn, Mn |
+| Binding Sites with Cofactors | 1,389 |
+| Common Cofactors | NAP, FAD, NDP |
+| Mean Binding Site Size | 36.45 residues |
+| Mean Standard Residues | 34.49 |
+| Mean Cavity Volume (Å³) | 792.66 |
+| Mean Hydrophobic Fraction (%) | 49.06 |
+| Mean Polar Fraction (%) | 50.94 |
+Table 1. Selected aggregated values of scPDB (v.2017)
+
+
 scPDB Dataset. The primary source of protein structures and related information for the study is scPDB [15]. scPDB is an annotated database of druggable binding sites derived from the Protein Data Bank (PDB) [4]. The scPDB mainly includes informa- tion on small synthetic and natural ligands, along with corresponding high-quality, non- redundant protein binding sites. For more structural information and for later analyses, I also made use of the latest stable release of a SCOPe database [11]: a database that classifies protein chains according to their structure, function, and taxonomy.
 
 By March 15th, 2026, there are 17,594 entries available for download from the official page of scPDB. However, according to the information on the official site, the last stable release (2017) contains 16,034 entries, 4,782 proteins, and 6,326 ligands. In order to collect more robust metadata and get potential insights into data patterns, I have downloaded the scPDB web pages of as many entries as are available. Using the BeautifulSoup4 module [55], I have successfully found 16,032 (91.1% of the database) entries, which is only two less than a stable release contains. Apart from scPDB, I have gathered additional descriptors through RCSB API[57], which provides various information about PDB entries, including citations, refinements, experimental setup, distinct molecules, aggregate metrics, etc. The main API endpoint is available for 17,539 entries (99.7%).
 
+[scopes.pdf](https://github.com/user-attachments/files/28502932/scopes.pdf)
+Figure 3. Visual representation of SCOPe subclasses present in the dataset.
+Indicates the dominance of certain structural patterns and a substantial portion of artifacts (l.1).
+
 Aggregation is performed over all 17,594 entries, and selected results are displayed in the Appendix via several tables. It is necessary to note that each row in these tables has a ’Source’ column, which indicates the origin of the data (’HTML’ stands for scPDB web page; ’RCSB’ stands for RCSB API; ’MOL2’ stands for structural files from the scPDB archive; and ’BASIC’ stands for the accessibility of entries). As far as each property covers a certain portion of entries while being unknown for the rest, a ’Coverage’ field is provided. From this observation also arises the fact that similar properties originating from different sources might have slightly different aggregated values.
 
 The metadata reveals several trends. The oldest registered structure in the set dates back to 1975, and the newest deposited structure is stamped with 2017, which makes the dataset slightly outdated. More than 99% of the structures have been resolved using X-ray diffraction, while less than 1% have been resolved using solution NMR. As for the X-ray methodology, the main emitters are synchrotrons (74.2%) and rotating anodes (21.1%), producing waves with lengths typically falling into the 1-2Årange. Two prevalent methods of crystal growth for X-ray analysis include the vapor diffusion of hanging drop (43.8%) and the vapor diffusion of sitting drop (20.2%). The mean pH of crystal growth is 6.77 (Std. 1.18). The diffraction detectors are Charge Coupled Devices (CCDs) in 63.9% of entries and an Image Plates in 21%. Thus, the linear resolution is reported to be around 2.1Å(SD 0.4Å), which is useful to know for the preprocessing stage. According to scPDB web pages, the genes of resolved proteins often belong to Homo sapiens (30.7%), Escherichia coli (5.55%), Rattus norvegicus (3.23%), HIV 1 (2.43%), Mycobacterium tuberculosis (2.23%), and Mus musculus (360/2.05%) (overall: 52.2% from eukaryotes, 30.2% from bacteria, 5.4% from viruses, and 3.27% from archaea).
+
+[chain_config.pdf](https://github.com/user-attachments/files/28502970/chain_config.pdf)
+Figure 4. Chain Configuration of proteins in the dataset. The numbers on the heatmap stand for the count of entries. The majority of entries fall into a bottom-left region.
 
 The PDB structures in the dataset are versatile in their composition. More than half of them have 3 or 4 distinct chemical entities, of which 1 is usually allocated for a solvent. However, some entries have up to 23 entities. The majority of entries (86.2%) have a single polymer entity representing a protein, 9.82% feature 2 polymer entities, while the rest have even more. Nucleic acids are rare ligands in the dataset: only about 1.5% of cases, of which DNA is more frequent than RNA. There is also a single case of a ligand being a DNA-RNA hybrid. Although scPDB only allows a single binding site per entry, the original PDB entries typically have more than 1 ligand: 31.7% have 2 ligands, 22.6% have 3 ligands, and only 25.4% feature one ligand initially. There are also rare cases of branched polymers (usually oligosaccharides): less than 2% of the entries have at least one such entity. Despite a certain skew towards simpler composition, there are outliers with up to 14 different peptide chains or up to 15 types of potential ligands in a single assembly.
 
@@ -196,10 +230,16 @@ Geometric Features. The local subgraphs now contain information about residues�
 
 Architecture The model (see Figure 8) follows the standard approach for graph neural networks. Firstly, the embeddings of individual nodes are passed through a multi-layer perceptron (MLP) to obtain latent representations. The latter are then transformed through a number of equivariant graph convolution layers (see below). A boolean mask is applied to extract the final representation of a central residue. This representation is concatenated with a vector of global protein features and passed through a dense MLP head to output a single scalar logit. Model architecture is thus kept intentionally simple. Only standard regularization techniques are used, such as dropout and batch normalization.
 
+[model.pdf](https://github.com/user-attachments/files/28503026/model.pdf)
+Figure 5. Sketch of the model architecture. Green boxes are part of the input.
+The blue box is the output.
 
 ## Hyperparameters Search
 
 Coarse Search. The first step of the experiment is a coarse hyperparameter search. Due to the computational limitations, the search is performed in two stages rather than via an exhaustive grid search. At first, I check hyperparameters of the model architecture while keeping the remaining parameters fixed to standard values (dropout rate 0.1, binary cross-entropy loss function with positive weight 10, and Adam optimizer with learning rate 0.001).
+
+[hp_broad.pdf](https://github.com/user-attachments/files/28503045/hp_broad.pdf)
+Figure 6. Summary of the broad hyperparameter search. In every triplet of values, the first number refers to the encoder, the second to the GNN, and the third to the dense head.
 
 The model is constructed from three main parts: the encoder, the GNN convolutional block, and the dense prediction head. For each component, the following hyperparameters are investigated: widths of the hidden layers (either 16 or 256); and depths (either 1 or 3 layers). Although I restrict myself to only two options per parameter, it already results in 64 combinations and requires several days of computation. To avoid a possible data leakage, the hyperparameter search is conducted using a separate subset of the dataset, which is not used further for cross-validation. The aim of this coarse search step is to estimate the impact of major architectural choices for every component.
 
@@ -211,9 +251,16 @@ The encoder with narrow and deep architecture performs consistently poorly (uppe
 Deep GNNs generally outperform shallow ones (darker vertical bands). Increasing the depth of the dense head does not lead to consistent advantage. There are no consistent patterns with respect to layer widths.
 There is one combination that outperforms all the others: Encoder (16 x 1), GNN (256 x 3), Head (256 x 3).
 
+[hp_complexity.pdf](https://github.com/user-attachments/files/28503099/hp_complexity.pdf)
+Figure 7. F1-score plotted against the complexity of the model (in log-scale). A linear model is fitted on the data after log-transforming
+the complexity.
+
 Figure 9 (right) gives an alternative perspective on the search results. Although noisy, the figure suggests that the performance has a weak positive correlation with complexity. However, the improvement in performance appears to be approximately linear, while the complexity increases exponentially. It means that investigating more complex models while already being close to the computational limit is excessive due to diminishing returns.
 
 Fine Search. For the next round of hyperparameter search, I take the best architecture found (Encoder (16 x 1), GNN (256 x 3), Head (256 x 3)) and focus on the training- related parameters. The new search grid includes three activation functions: LeakyReLU, ReLU, and ELU; two dropout rates: 0.1 and 0.2; two learning rates: 0.001 and 0.0001; and three positive class weights: 6, 8, and 10.
+
+<img width="1189" height="1180" alt="hp_grid" src="https://github.com/user-attachments/assets/07b5f8fa-c4d9-40e0-9ee1-38c73744407c" />
+Figure 8. Validation F1-score by epoch for several runs during hyperparameter search. Values in the subplot titles refer to the activation function / dropout / learning rate / positive weight. Dashed lines indicate the best metric per run and its epoch, while red lines indicate the best overall combinations.
 
 Selected results are shown in Figure 10. Only runs with positive weight; 10 are presented in the figure, since other positive weights appeared to be less stable during training and inferior in performance. The best validation score is achieved by combining ELU, a dropout rate of 0.1, and a learning rate of 0.001. However, several combinations are com- parable in terms of performance while exhibiting more stable training curves. Especially LeakyReLU with a dropout rate of 0.2 and a learning rate of 0.0001 converges smoothly within just 12 epochs. Note that direct comparison of validation losses is not possible as long as different positive class weights are used in the experiments.
 
@@ -228,9 +275,17 @@ Logits Collection. Logits are collected from all folds and merged together, whic
 Using just a single retained test set for evaluation would result in only approximately 800 proteins, which would increase the risk of certain groups being underrepresented and reduce the strength of statistical analysis. The cross-validation, in turn, allows us to collect predictions that cover the whole dataset.
 
 ## Residue Level Statistics
+
+<img width="686" height="682" alt="Screenshot 2026-06-02 at 11 52 52" src="https://github.com/user-attachments/assets/82a3cb32-fda8-4a2e-8c22-49ef4f667f60" />
+Table 2. Bulk aggregated metrics of different protein groups on residues level. The highest values - in bold,the second highest - in italics
+
 As a preliminary step, the residue-level metrics are computed (see Table 4). It can already give a hint of main trends: the difference between structural groups (SCOPe) is substan- tial: from 0.123 F-score for class ’h’ (coiled coils) to 0.536 F1-score for class ’b’ (β-sheet proteins). It is also noticeable that overrepresented classes do not have apparent perfor- mance boosts over underrepresented classes: class ’c’ (α/β) performance is comparable with class ’j’ (peptides) performance, while class ’c’ has almost 1500 times more samples. Another preliminary observation is that functional classes perform more consistently and also benefit from broader representation: the best-performing class, ’2’ (transferases), is also the most abundant, while the worst-performing class, ’7’ (translocases), has the least number of samples. For the kingdom of the source organism, the preliminary results are curious: viral proteins have dominating performance, bacterial and archean proteins have almost indistinguishable metrics, while eukaryote proteins performance lies in-between.
 
 ## Protein Level Statistics
+
+<img width="966" height="718" alt="Screenshot 2026-06-02 at 11 53 15" src="https://github.com/user-attachments/assets/6a0b0bde-d8bb-4276-8f33-6713ba571411" />
+Figure 8. Comparison of model performance (F1-scores) across different classifications (numbers on top indicate the number of proteins per class). Top Left: SCOPe; Top Right: EC; Bottom Left: Size; Bottom Right: Kingdom.
+
 The next step is to compute the metrics at the protein level. These metrics lead to more sensible and interpretable results and also allow us to conduct statistical analysis. In Figure 12, the F1-scores of the protein groups according to different classifications are shown as a combination of a box plot (with standard definitions for body, whiskers, and outliers) and a violin plot. Notice that box plots for the particular ligands and organisms are located in Appendix C (Figure 14, Figure 15). The box plot alone does not fully describe distribution shape but is easier for immediate comparison and interpretation.
 
 The violin plot in the background of a box plot augments the information with the shape of the distribution and can show clusters, which are not identified as outliers by the box plot. The numbers on top of each group in the plots indicate the number of proteins in the dataset attributed to this group.
@@ -248,28 +303,90 @@ The combined results of the Kruskal-Wallis test are presented in (Table 6). For 
 
 Post-hoc Dunn’s test. The results of Dunn’s tests are represented as heatmaps in Fig- ure 13. Dunn’s test heatmaps for proteins grouped by organism and ligand are located in the Appendix C. The visual analysis reveals that the pairwise test is significant for the majority of pairs of SCOPe classes, although membrane proteins, multi-domain proteins, and small proteins do not show significant differences. The EC classification unveils a curious pattern: hydrolases and transferases are significantly different in terms of per- formance from all other enzyme classes and also from each other. The performance of oxidoreductases is also noticeably different from that of the majority of other functional classes. The p-values heatmap of size classification suggests that small proteins (less than 100 residues) do not perform significantly differently compared to medium-sized proteins (100-400 residues). Almost all the other comparisons feature p-values below .05 or below .01. The situation with proteins grouped according to the kingdom of their source organ- ism implies that eukaryotic proteins exhibit significantly different performance against other kingdoms; however, pairwise comparisons between bacterial, archean, and viral pro- teins have p-values high above the threshold. Additionally, comparisons between vastly represented organisms indicate the strong particularity of human-derived proteins (see Figure 19). In terms of classification by frequent ligands, proteins associated with coen- zyme A (RCSB ID: "COA") or NADP (nicotinamide adenine dinucleotide phosphate, RCSB ID: "NAP") have F1-scores significantly different from other ligands (see Fig- ure 20).
 
-## Effect Sizes and Latent Scores
-Cliff’s Deltas. The Dunn’s test only gives a hint about potentially valuable comparisons. To determine the effect of different groups on the model performance, I rely on effect size measure via Cliff’s Delta [12]:
-PP
-δ = i,j 1(xiA > xjB)− i,j 1(xiA < xjB) (8) nA nB
-where xiA - the i-th element of group A; xjB - the j-th element of group B; n1,n2 - the sizes of the groups; and 1(f) - a predicate returning 1 if condition f is true and 0 otherwise. The order of the groups in a pair matters.
-The methodology is the following: for every comparison that has a p-value below .05 according to the Dunn’s test, the Cliff’s delta is computed. The positive value of delta indicates the higher performance of group A, while the negative delta indicates the higher performance of group B. The absolute value of the delta can be interpreted as an "effect size". In the scope of this research, it can be viewed as a tendency towards better per- formance in group A compared to group B. For this research, I consider the magnitude below 0.15 negligible; from 0.15 up to 0.33 as small; from 0.33 up to 0.47 as medium; from 0.47 up to 0.6 as large; and above 0.6 as very large. The summary of all pairs of groups that are simultaneously significant according to Dunn’s test and have a non-negligible Cliff’s delta is shown in Table 7.
-Latent Scores from Linear Model. After taking a closer look at the significant pair- wise comparisons, one can notice that there are no cycles in the results, which suggests that pairwise comparisons are approximately consistent with global ordering (transitive assumption). This observation, in turn, allows me to construct a one-dimensional latent rating score by learning latent factors via linear regression. Therefore, a latent group ranking can be estimated by fitting the model using difference pairs and delta values. Let G = {1,...,Ngroups} be the set of groups within classification. For each significant pairwise comparison i = 1, . . . , n, let ai , bi ∈ G stand for the groups compared, and let di be the corresponding Cliff’s delta for the comparison ai versus bi (comparison is ordered). A matrix X ∈ Rn×Ngroups is constructed as
- 1,
-Xij = −1, 
-0,
-j = ai,
-j = bi, (9) otherwise.
-The effect sizes are then represented as the differences between latent scores. Including the noise:
-di =wai −wbi +εi. (10) This can equivalently be formulated in matrix notation:
-d = Xw + ε, (11)
-where w ∈ RNgroups is a vector that contains the latent scores of the groups. The well-known least-squares estimate is therefore
-Finally, since the data only include differences, the latent scores vector can only be defined
-up to an additive constant. For comparability reasons, scores are centered after fitting:
-Ngroups X
-The coefficient of determination (R2) of the fitted linear models remains above 0.97 (mostly above 0.99) across all the classifications used, which supports the assumption that the pairwise deltas are well explained by a compact one-dimensional ordering.
+<img width="807" height="710" alt="Screenshot 2026-06-02 at 11 53 57" src="https://github.com/user-attachments/assets/58b04c85-06e4-4a9c-ad01-dda8ba7bdfcd" />
+Figure 9. Dunn’s test results for different classifications. P-values above .05 are colored with shades of red; values below .05 are colored with shades of blue. Negative integers mean decimal logs of small p-values. Top Left: SCOPe; Top Right: EC; Bottom Left: Size; Bottom Right: Kingdom
 
-The final result of the research is shown in Table 9. The similar table for species- based and ligand-based classifications can be found in Appendix D as Table 27. In the table, the centered latent scores and F1 scores are summarized. There are also win- lose integer scores that are evaluated as the number of wins over other groups through significant comparisons minus the number of losses. For the sake of completeness, the group sizes are also added to the table. The consistency of values in the table strengthens the results: the latent rating scores, the F1 scores, and win/lose scores are in agreement in terms of ranking in each of the four major classifications.
+## Effect Sizes and Latent Scores
+## Effect Sizes and Latent Scores
+
+### Cliff's Delta
+
+To quantify the magnitude and direction of differences between protein groups, I use **Cliff's Delta**:
+
+$$
+\delta =
+\frac{
+\sum_{i,j}\mathbf{1}(x_{iA}>x_{jB})
+-
+\sum_{i,j}\mathbf{1}(x_{iA}<x_{jB})
+}
+{n_A n_B}
+$$
+
+where:
+
+- $begin:math:text$x\_\{iA\}$end:math:text$ – i-th observation from group A
+- $begin:math:text$x\_\{jB\}$end:math:text$ – j-th observation from group B
+- $begin:math:text$n\_A\, n\_B$end:math:text$ – group sizes
+- $begin:math:text$\\mathbf\{1\}\(\\cdot\)$end:math:text$ – indicator function
+
+Interpretation:
+
+| $begin:math:text$\|\\delta\|$end:math:text$ | Effect Size |
+|-------------|-------------|
+| < 0.15 | Negligible |
+| 0.15 – 0.33 | Small |
+| 0.33 – 0.47 | Medium |
+| 0.47 – 0.60 | Large |
+| > 0.60 | Very Large |
+
+Only pairwise comparisons that were significant according to Dunn's post-hoc test ($begin:math:text$p \< 0\.05$end:math:text$) were considered.
+
+---
+
+### Latent Group Ranking
+
+Significant pairwise Cliff's deltas were converted into a one-dimensional latent ranking.
+
+For each significant comparison between groups $begin:math:text$a\_i$end:math:text$ and $begin:math:text$b\_i$end:math:text$, a row of the design matrix is defined as
+
+$$
+X_{ij}=
+\begin{cases}
+1,& j=a_i \\
+-1,& j=b_i \\
+0,& \text{otherwise}
+\end{cases}
+$$
+
+The model assumes
+
+$$
+d_i = w_{a_i}-w_{b_i}+\varepsilon_i,
+$$
+
+or equivalently
+
+$$
+\mathbf d = \mathbf X \mathbf w + \boldsymbol\varepsilon.
+$$
+
+The latent scores are estimated using ordinary least squares:
+
+$$
+\hat{\mathbf w}
+=
+(\mathbf X^T\mathbf X)^{-1}
+\mathbf X^T
+\mathbf d.
+$$
+
+Scores are centered after fitting because only pairwise differences are identifiable.
+
+The resulting models achieved $begin:math:text$R\^2 \> 0\.97$end:math:text$ for all investigated classifications, indicating that a one-dimensional latent ordering explains the observed effect sizes remarkably well.
+
+<img width="596" height="679" alt="Screenshot 2026-06-02 at 11 54 23" src="https://github.com/user-attachments/assets/da59ca37-054e-43f9-996b-79425a53199e" />
+Table 3. Final result for classifications by SCOPe, EC, Size and Reign (Kingdom). (Sorted by Latent Factor from high to low)
 
 ## Conclusion and Limitations
 Grouping by Size. The initial hypothesis that the GNN-based model exhibits different performance across different structural, functional, and source-based protein groups is supported by experimental results. Structural groups, which include a naive classification by protein sequence length and a more robust classification according to SCOPe, show the largest variation in performance metrics.
