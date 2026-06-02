@@ -133,6 +133,8 @@ low) resolved in the pocket (red). PDB: 1dmp.
 <img width="3172" height="2356" alt="drug_discovery" src="https://github.com/user-attachments/assets/68aab60a-b4d8-4929-8a30-b3018f234282" />
 Figure 2. Drug Discovery pipeline [2], research-relevant steps highlighted with gray background.
 <br>
+<br>
+<br>
 
 The three-dimensional structures of proteins form intricate surfaces with numerous concavities and protrusions, creating distinct microenvironments for ligand binding and catalysis [3]. Therefore, binding sites are typically localized regions composed of several residues. These regions are particularly favorable for recognition and interaction with specific ligands.
 
