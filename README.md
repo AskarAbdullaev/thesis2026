@@ -112,4 +112,12 @@ For this project I used the following modules:
  
 ```
 
-## Introduction
+## Abstract
+
+Accurate prediction of protein binding sites is an important step in structure-based drug discovery. It allows for identification of protein regions that are accessible for ligands (drugs), which in turn facilitates the target molecule characterization and virtual screen- ing and eventually makes drug discovery more rational and time-efficient. Although deep learning methods are applied successfully for the task and achieve strong performance, the studies usually evaluate models using heterogeneous datasets without analyzing how the performance varies across different types of proteins.
+
+This study leverages the generic but robust and well-established Equivariant Graph Neu- ral Network (EGNN) model with a preprocessing pipeline inspired by DeepSite and inves- tigates the dependence of its performance with respect to different protein classifications. As a benchmark dataset, scPDB is chosen, the analysis is conducted on residue-level, and evaluation is performed using cross-validation. Research focuses on structural, functional, and evolutionary groupings and assesses how these properties influence the model’s gen- eralization ability.
+
+Substantial differences in the quality of the predictions are revealed, especially across structural classes. Protein size exhibits the strongest effect on the performance: medium- sized proteins (100-400 residues) consistently outperform both smaller and larger pro- teins. Considering the overall structural composition, proteins with spatially separated α-helices and β-sheets outperform structures with interleaved motifs (α/β) and multi- domain proteins. Membrane proteins and small proteins with an irregular secondary structure perform significantly worse than other groups. In contrast, the observed effects of functional and evolutionary classifications are weaker and less consistent than those of structural groupings.
+
+These findings demonstrate that structural heterogeneity affects the performance and generalization of EGNN-based models of binding site prediction. Several directions for future research can be proposed according to the observations: using separate models for proteins of different sizes and structural compositions and applying individual prepro- cessing strategies for structurally atypical samples.
