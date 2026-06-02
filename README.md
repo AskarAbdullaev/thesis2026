@@ -129,6 +129,8 @@ Proteins are large complex molecules composed of sequences of 20 different amino
 Figure 1. HIV-1 protease (blue) complex with DMQ/Mozenavir (yel-
 low) resolved in the pocket (red). PDB: 1dmp.
 <br>
+<br>
+<br>
 
 <img width="3172" height="2356" alt="drug_discovery" src="https://github.com/user-attachments/assets/68aab60a-b4d8-4929-8a30-b3018f234282" />
 Figure 2. Drug Discovery pipeline [2], research-relevant steps highlighted with gray background.
@@ -165,6 +167,9 @@ The main goal of this research is to assess the comparative performance of bindi
 | Mean Hydrophobic Fraction (%) | 49.06 |
 | Mean Polar Fraction (%) | 50.94 |
 Table 1. Selected aggregated values of scPDB (v.2017)
+<br>
+<br>
+<br>
 
 The primary source of protein structures and related information for the study is scPDB [5]. scPDB is an annotated database of druggable binding sites derived from the Protein Data Bank (PDB) [6]. The scPDB mainly includes information on small synthetic and natural ligands, along with corresponding high-quality, non- redundant protein binding sites. For more structural information and for later analyses, I also made use of the latest stable release of a SCOPe database [7]: a database that classifies protein chains according to their structure, function, and taxonomy.
 
@@ -174,9 +179,13 @@ By March 15th, 2026, there are 17,594 entries available for download from the of
 Figure 3. Visual representation of SCOPe subclasses present in the dataset.
 Indicates the dominance of certain structural patterns and a substantial portion of artifacts (l.1).
 <br>
+<br>
+<br>
 
 <img width="2560" height="2560" alt="chain_config" src="https://github.com/user-attachments/assets/61a49171-c2f6-4edf-af49-a878f04bcfec" />
 Figure 4. Chain Configuration of proteins in the dataset. The numbers on the heatmap stand for the count of entries. The majority of entries fall into a bottom-left region.
+<br>
+<br>
 <br>
 
 There are only 4688 unique UniProt identifiers, 903 PDB codes are encountered twice. The lengths of peptide chains are highly variable. The values span from only 35 residues to several thousand residues (according to mol2 file analysis). The chain composition tends to be simple in most cases. 87.6% of entries can be described with a single FASTA sequence (although the number of identical monomers varies). 9.18% have 2 unlike chain types, 1.89% have 3 unlike chain types, and 1.33% have more than 3 (up to 14). 
@@ -201,6 +210,8 @@ The following design choices are therefore imposed:
 Figure 5. Sketch of the model architecture. Green boxes are part of the input.
 The blue box is the output.
 <br>
+<br>
+<br>
 
 ## Hyperparameters Search
 
@@ -208,6 +219,8 @@ At first, I check hyperparameters of the model architecture while keeping the re
 
 <img width="1536" height="1536" alt="hp_broad" src="https://github.com/user-attachments/assets/7dcb0949-0052-4e2f-b053-07e2bc24e1c8" />
 Figure 6. Summary of the broad hyperparameter search. In every triplet of values, the first number refers to the encoder, the second to the GNN, and the third to the dense head.
+<br>
+<br>
 <br>
 
 By comparing combinations pairwise along columns and in rows, one can observe the following:
@@ -218,11 +231,15 @@ The encoder with narrow and deep architecture performs consistently poorly (uppe
 Figure 7. F1-score plotted against the complexity of the model (in log-scale). A linear model is fitted on the data after log-transforming
 the complexity.
 <br>
+<br>
+<br>
 
 For the next round of hyperparameter search, I take the best architecture found (Encoder (16 x 1), GNN (256 x 3), Head (256 x 3)) and focus on the training-related parameters. The new search grid includes three activation functions: LeakyReLU, ReLU, and ELU; two dropout rates: 0.1 and 0.2; two learning rates: 0.001 and 0.0001; and three positive class weights: 6, 8, and 10.
 
 <img width="1189" height="1180" alt="hp_grid" src="https://github.com/user-attachments/assets/07b5f8fa-c4d9-40e0-9ee1-38c73744407c" />
 Figure 8. Validation F1-score by epoch for several runs during hyperparameter search. Values in the subplot titles refer to the activation function / dropout / learning rate / positive weight. Dashed lines indicate the best metric per run and its epoch, while red lines indicate the best overall combinations.
+<br>
+<br>
 <br>
 
 The best validation score is achieved by combining ELU, a dropout rate of 0.1, and a learning rate of 0.001. However, several combinations are com- parable in terms of performance while exhibiting more stable training curves. Especially LeakyReLU with a dropout rate of 0.2 and a learning rate of 0.0001 converges smoothly within just 12 epochs. Note that direct comparison of validation losses is not possible as long as different positive class weights are used in the experiments.
@@ -237,6 +254,8 @@ After selecting the hyperparameters, I proceed with evaluating the model perform
 <img width="686" height="682" alt="Screenshot 2026-06-02 at 11 52 52" src="https://github.com/user-attachments/assets/82a3cb32-fda8-4a2e-8c22-49ef4f667f60" />
 Table 2. Bulk aggregated metrics of different protein groups on residues level. The highest values - in bold,the second highest - in italics
 <br>
+<br>
+<br>
 
 As a preliminary step, the residue-level metrics are computed (bulk). The difference between structural groups (SCOPe) is substantial: from 0.123 F-score for class ’h’ (coiled coils) to 0.536 F1-score for class ’b’ (β-sheet proteins). It is also noticeable that overrepresented classes do not have apparent performance boosts over underrepresented classes: class ’c’ (α/β) performance is comparable with class ’j’ (peptides) performance, while class ’c’ has almost 1500 times more samples.
 
@@ -244,6 +263,8 @@ As a preliminary step, the residue-level metrics are computed (bulk). The differ
 
 <img width="966" height="718" alt="Screenshot 2026-06-02 at 11 53 15" src="https://github.com/user-attachments/assets/6a0b0bde-d8bb-4276-8f33-6713ba571411" />
 Figure 9. Comparison of model performance (F1-scores) across different classifications (numbers on top indicate the number of proteins per class). Top Left: SCOPe; Top Right: EC; Bottom Left: Size; Bottom Right: Kingdom.
+<br>
+<br>
 <br>
 
 The next step is to compute the metrics at the protein level. These metrics lead to more sensible and interpretable results and also allow us to conduct statistical analysis.
@@ -255,6 +276,8 @@ For statistical analysis, a Kruskal-Wallis test [10] is applied, as there are se
 
 <img width="807" height="710" alt="Screenshot 2026-06-02 at 11 53 57" src="https://github.com/user-attachments/assets/58b04c85-06e4-4a9c-ad01-dda8ba7bdfcd" />
 Figure 10. Dunn’s test results for different classifications. P-values above .05 are colored with shades of red; values below .05 are colored with shades of blue. Negative integers mean decimal logs of small p-values. Top Left: SCOPe; Top Right: EC; Bottom Left: Size; Bottom Right: Kingdom
+<br>
+<br>
 <br>
 
 ## Effect Sizes and Latent Scores
@@ -335,6 +358,8 @@ The resulting models achieved $begin:math:text$R\^2 \> 0\.97$end:math:text$ for 
 
 <img width="596" height="679" alt="Screenshot 2026-06-02 at 11 54 23" src="https://github.com/user-attachments/assets/da59ca37-054e-43f9-996b-79425a53199e" />
 Table 3. Final result for classifications by SCOPe, EC, Size and Reign (Kingdom). (Sorted by Latent Factor from high to low)
+<br>
+<br>
 <br>
 
 ## Conclusion and Limitations
