@@ -289,10 +289,9 @@ To quantify the magnitude and direction of differences between protein groups, I
 $$
 \delta =
 \frac{
-\sum_{i,j}\mathbf{1}(x_{iA}>x_{jB}) - 
-\sum_{i,j}\mathbf{1}(x_{iA}<x_{jB})
-}
-{n_A n_B}
+\sum_{i,j}\mathbf{1}(x_{iA}\>x_{jB}) - 
+\sum_{i,j}\mathbf{1}(x_{iA}\<x_{jB})
+}{n_A n_B}
 $$
 
 where:
